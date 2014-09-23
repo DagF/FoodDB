@@ -1,0 +1,60 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+header{
+    background: turquoise;
+}
+
+nav ul{
+    width:100%;
+    background: grey;
+    display: block;
+}
+
+nav ul li{
+    display: inline-block;
+    text-decoration: none;
+}
+
+nav a{
+    display: block;
+    padding: 5px;
+    margin-right:-4px ;
+    text-decoration: none;
+    color: black;
+}
+
+nav a:hover{
+    background:darkgray;
+}
+
+nav a.active{
+    background: lightblue;
+}
+
+nav a.active:hover{
+    background:lightblue;
+}
+
+#wrapper{
+
+}
+
+#content{
+    width:98%;
+    margin: 0 auto;
+    padding-top:5px;
+}
+
+#content table{
+    border-collapse: collapse;
+    vertical-align: top;
+}
+
+#content td, th{
+    border:1px solid black;
+    padding: 2px 5px;
+    text-align: left;
+}
