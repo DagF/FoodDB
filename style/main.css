@@ -58,3 +58,11 @@ nav a.active:hover{
     padding: 2px 5px;
     text-align: left;
 }
+
+.display{
+    display: inline-block;
+}
+
+.hide{
+    display: none;
+}

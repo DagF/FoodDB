@@ -1,3 +1,3 @@
-function toast( message ){
+function Toast( message ){
     alert( message );
 }

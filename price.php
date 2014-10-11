@@ -1,10 +1,4 @@
 <?php
-session_start();
-$_SESSION['verified'] = 1;
-
-require_once( "constants.php" );
-require_once( "classes/Database.php" );
-$database = Database::Instance();
 
 require_once( "classes/Template.php" );
 
@@ -19,9 +13,6 @@ require_once("classes/price/PriceListView.php");
 require_once("classes/price/PriceListRow.php");
 require_once("classes/price/PriceListColumn.php");
 
-require_once("classes/OptionListRow.php");
-
-require_once( "function_dmp.php" );
 
 if( isset( $_GET['action'] ) ){
     $action = $_GET['action'];
@@ -34,7 +25,7 @@ function isPriceFormDataAvailable(){
     return isset( $_POST['price'] );
 }
 
-if( isPriceFormDataAvailable()  ){
+if( isPriceFormDataAvailable() && isVerified() ){
     $price = Price::withInputArray( $_POST );
     $database->insertPrice( $price );
     header( "Location: price.php?action=list");
@@ -61,5 +52,5 @@ $page = new Template( "templates/main.tpl");
 $page->set("title", $title);
 $page->set( "content", $content);
 $page->set( "price_status", "active");
-$page->addScript("script/price_live_editing.js");
+$page->addAdminScript("script/price_live_editing.js");
 echo $page->output();

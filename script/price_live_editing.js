@@ -5,47 +5,69 @@
     }
 
     function openEditDialog( e ){
-        var price = new Price( e );
-    }
-
-    function Price( event ){
-        this.target = event.target;
-        this.parent = this.target.parentNode;
-        this.name = this.parent.getElementsByTagName("th")[0].getElementsByTagName("a")[0].innerHTML;
-        this.product_id = this.target.getAttribute("data-product-id");
-        this.shop_id = this.target.getAttribute("data-shop-id");
-        this.shop_name = this.target.getAttribute("data-shop-name");
-        this.price = this.target.innerHTML;
-        var new_price = prompt( "Skriv inn ny pris for produktet " + this.name + " hos butikken " + this.shop_name + ".\n Nåverende pris er: " + this.price );
+        var price = getExistingPrice( e );
+        var new_price = prompt( "Skriv inn ny pris for produktet " + price.getProductName() + " hos butikken " + price.getShopName() + ".\n Nåverende pris er: " + price.getPrice() );
         if( new_price.length > 0 ){
-            var data = {
-                "shop_id" : this.shop_id,
-                "product_id" : this.product_id,
-                "price" : new_price
-            };
-            sendData( data );
-            this.target.innerHTML = parseFloat(Math.round( new_price * 100) / 100).toFixed(2);
+            price = new Price(price.getProductName(), price.getProductId(), price.getShopName(), price.getShopId(), new_price);
+            updateDatabaseRecord( price );
+            e.target.innerHTML = parseFloat(Math.round( new_price * 100) / 100).toFixed(2);
         }
     }
 
-    function EditDialogView(){
+    function getExistingPrice( event ){
+        var target = event.target;
+        var parent = target.parentNode;
+
+        var product_name = parent.getElementsByTagName("th")[0].getElementsByTagName("a")[0].innerHTML;
+        var product_id = target.getAttribute("data-product-id");
+        var shop_id = target.getAttribute("data-shop-id");
+        var shop_name = target.getAttribute("data-shop-name");
+        var price = target.innerHTML;
+
+        return new Price(product_name, product_id, shop_name,shop_id,price);
+    }
+
+    function Price( product_name, product_id, shop_name, shop_id, price ){
+
+        this.getPrice = function (){
+            return price;
+        }
+
+        this.getProductName = function (){
+            return product_name;
+        }
+
+        this.getProductId = function (){
+            return product_id;
+        }
+
+        this.getShopId = function (){
+            return shop_id;
+        }
+
+        this.getShopName = function (){
+            return shop_name;
+        }
+
 
     }
+
+
 
     /*
     * based on https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Forms/Sending_forms_through_JavaScript
     * */
 
-    function sendData( data ) {
+    function updateDatabaseRecord( price ) {
         var xml_http_request = new XMLHttpRequest();
         var form_data  = new FormData();
 
-        for(name in data) {
-            form_data.append( name, data[name] );
-        }
+        form_data.append( "product_id", price.getProductId() );
+        form_data.append( "shop_id", price.getShopId() );
+        form_data.append( "price", price.getPrice() );
 
         xml_http_request.addEventListener('load', function(event) {
-            toast('Yeah! Data sent and response loaded.');
+            new Toast('Yeah! Data sent and response loaded.');
         });
 
         xml_http_request.addEventListener('error', function(event) {

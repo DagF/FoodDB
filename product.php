@@ -1,10 +1,4 @@
 <?php
-session_start();
-$_SESSION['verified'] = 1;
-
-require_once( "constants.php" );
-require_once( "classes/Database.php" );
-$database = Database::Instance();
 
 require_once( "classes/Template.php" );
 
@@ -14,9 +8,7 @@ require_once("classes/product/ProductEditView.php");
 require_once("classes/product/ProductListView.php");
 require_once("classes/product/ProductListRow.php");
 
-require_once("classes/OptionListRow.php");
 
-require_once( "function_dmp.php" );
 
 if( isset( $_GET['action'] ) ){
     $action = $_GET['action'];
@@ -36,9 +28,6 @@ function isProductIdGiven(){
 }
 
 
-function isMarkedForDelete(){
-    return ( isset( $_POST['action'] ) and $_POST['action'] == "delete" );
-}
 
 function isProductQualifiedForInsert(){
     return !isMarkedForDelete() and !isProductIdGiven();
@@ -52,7 +41,7 @@ function isProductQualifiedForDelete(){
     return isProductIdGiven() and isMarkedForDelete();
 }
 
-if( isProductFormDataAvailable() ){
+if( isProductFormDataAvailable() && isVerified() ){
     $database = Database::Instance();
     if( isProductFormDataAvailable()  ){
         $product = Product::withInputArray( $_POST );
@@ -62,7 +51,7 @@ if( isProductFormDataAvailable() ){
         }
         else if( isProductQualifiedForInsert() ){
             $database->insertProduct( $product );
-            header( "Location: index.php?action=edit_product&id={$product->getID()}");
+            header( "Location: product.php?action=edit&id={$product->getID()}");
         }
         else if( isProductQualifiedForDelete() ){
             $database->deleteProduct( $_GET['id'] );
@@ -73,7 +62,6 @@ if( isProductFormDataAvailable() ){
         $product = $database->getProductById( $_GET['id'] );
 
     }
-    return $product;
 }
 
 
@@ -118,16 +106,17 @@ switch( $action ){
         break;
 
     case "edit":
-        $product = editProduct();
-        $content = getProductContent( $product );
+        $id = $_GET['id'];
+        $product = $database->getProductById( $id );
+        $is_new = false;
+        $edit_product_view = new ProductEditView( $product, $is_new );
+        $content = $edit_product_view->output();
         break;
 
     case "view":
         $id = $_GET['id'];
         $product = $database->getProductById( $id );
-        $product = Product::withDatabaseArray( $product );
-        $is_new = false;
-        $edit_product_view = new ProductEditView( $product, $is_new );
+        $edit_product_view = new ProductView( $product );
         $content = $edit_product_view->output();
         break;
 
@@ -146,4 +135,5 @@ $page = new Template( "templates/main.tpl");
 $page->set("title", $title);
 $page->set( "content", $content);
 $page->set( "product_status", "active");
+$page->addAdminScript("script/product_live_editing.js");
 echo $page->output();

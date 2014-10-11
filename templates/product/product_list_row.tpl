@@ -1,4 +1,4 @@
-<tr>
+<tr data-product-id="[@product_id]">
     <td><a href="product.php?action=view&id=[@product_id]">[@navn]</a></td>
     <td>[@kilojoule]</td>
     <td>[@kilokalorier]</td>

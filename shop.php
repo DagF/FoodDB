@@ -1,10 +1,5 @@
 <?php
-session_start();
-$_SESSION['verified'] = 1;
 
-require_once( "constants.php" );
-require_once( "classes/Database.php" );
-$database = Database::Instance();
 
 require_once( "classes/Template.php" );
 
@@ -14,9 +9,7 @@ require_once("classes/shop/ShopEditView.php");
 require_once("classes/shop/ShopListView.php");
 require_once("classes/shop/ShopListRow.php");
 
-require_once("classes/OptionListRow.php");
 
-require_once( "function_dmp.php" );
 
 
 if( isset( $_GET['action'] ) ){
@@ -48,7 +41,7 @@ function isShopQualifiedForDelete(){
 
 function editShop(){
     $database = Database::Instance();
-    if( isShopFormDataAvailable()  ){
+    if( isShopFormDataAvailable() && isVerified()  ){
         $shop = Shop::withInputArray( $_POST );
         if( isShopQualifiedForUpdate() ){
             $shop->setId( $_GET['id'] );

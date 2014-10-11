@@ -17,6 +17,8 @@
                     <li><a class="[@product_status]" href="product.php">Produkt liste</a></li>
                     <li><a class="[@price_status]" href="price.php">Pris liste</a></li>
                     <li><a class="[@shop_status]" href="shop.php">Butikk liste</a></li>
+                    <li class="[@display_logout]"><a class="[@login_status]" href="login.php">Login</a></li>
+                    <li class="[@display_login]"><a class="[@logout_status]" href="logout.php">Logout</a> </li>
                 </ul>
             </nav>
             <div id="content">[@content]</div>

@@ -1,30 +1,16 @@
 <?php
-session_start();
-$_SESSION['verified'] = 1;
-
-require_once( "constants.php" );
-require_once( "classes/Database.php" );
-$database = Database::Instance();
-
 
 require_once( "classes/Template.php" );
 
+require_once( "common_functions.php");
+require_once( "classes/LoginView.php" );
 
-
-require_once("classes/OptionListRow.php");
-
-require_once( "function_dmp.php" );
 
 $title = "Main";
 $content = "Move along";
 
 if( isset( $_GET['action'] ) ){
     switch( $_GET['action'] ){
-
-        //**************************** shop *************************
-
-
-        //************************* price ****************************
 
     }
 
